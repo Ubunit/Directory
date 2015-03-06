@@ -93,7 +93,7 @@ FileWriter writer = null;
 public static void main(String[] args) {
 	TelephoneDirectory s = new TelephoneDirectory();
 }
-  //==========================================================================================================
+
     void rewriteBox(){
     	name = new String[book.size()];
     	Set<Map.Entry<String,String>> s = book.entrySet();
@@ -201,9 +201,7 @@ TelephoneDirectory s;
 		 }
 		 if(s.yes == e.getSource()){
                  if(s.NAME.getText().indexOf(",") != -1 || s.NAME.getText().indexOf("=") != -1 ||
-                	s.NUM.getText().indexOf(",") != -1 || s.NUM.getText().indexOf("=") != -1 || 
-                	s.NAME.getText().indexOf("}") != -1 || s.NAME.getText().indexOf("{") != -1 ||
-                	s.NUM.getText().indexOf("}") != -1 || s.NUM.getText().indexOf("{") != -1){
+                	s.NUM.getText().indexOf(",") != -1 || s.NUM.getText().indexOf("=") != -1){
                 	 JOptionPane.showMessageDialog(null, "Недопустимые символы");
                 	 s.NAME.setText("");
 					 s.NUM.setText("");
