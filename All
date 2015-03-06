@@ -1,7 +1,6 @@
 package Directory;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
