@@ -1,0 +1,324 @@
+package Directory;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.io.*;
+
+public class TelephoneDirectory { 
+JButton search, yes, no, fileNew, delete;
+JComboBox numAll;
+JTextField NUM,NAME;
+JFrame frame, frame2, begin;
+JButton plus;
+String [] name;
+String t = "", t2;
+int i = 0;
+boolean a, nuull;
+
+Map<String,String> book = new HashMap<String,String>();
+FileReader reader = null;
+BufferedReader buff = null;
+FileWriter writer = null;
+	TelephoneDirectory(){
+		frame = new JFrame();
+		frame.setLayout(null);
+		lr l = new lr(this);
+		begin = new JFrame();
+		begin.setSize(200,100);
+		begin.setLocationRelativeTo(null);
+		begin.setVisible(true);
+		begin.setResizable(false);
+		begin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		fileNew = new JButton("Загрузить список");
+		fileNew.addActionListener(l);
+		fileNew.setSize(150,40);
+		fileNew.setLocation(10, 140);
+		begin.add(fileNew);
+		search = new JButton("Показать значение");
+		search.setSize(150,60);
+		search.setLocation(0, 0);
+		search.addActionListener(l);
+		search.setBorder(new TitledBorder(""));
+		plus = new JButton("Добавить");
+		plus.addActionListener(l);
+		plus.setSize(150,40);
+		plus.setLocation(0, 100);
+		delete = new JButton("Удалить");
+		delete.setSize(150,40);
+		delete.setLocation(0,140);
+		delete.addActionListener(l);
+		frame.add(delete);
+		frame.add(plus);
+		frame.add(search);
+		frame2 = new JFrame("Запись в книжку");
+		frame2.setLayout(null);
+		yes = new JButton("Записать");
+		yes.setSize(100,40);
+		yes.setLocation(0,50);
+		yes.addActionListener(l);
+		frame2.add(yes);
+		no = new JButton("Отмена");
+		no.setSize(100,40);
+		no.setLocation(100,50);
+		no.addActionListener(l);
+		frame2.add(no);
+		NAME = new JTextField(10);
+		NAME.setSize(100,50);
+		NAME.setLocation(0,0);
+		NAME.setBorder(new TitledBorder("Название"));
+		frame2.add(NAME);	
+		NUM = new JTextField(10);
+		NUM.setSize(100,50);
+		NUM.setLocation(100,0);
+		NUM.setBorder(new TitledBorder("Значение"));
+		frame2.add(NUM);	
+		frame2.setSize(206,118);
+		frame2.setLocationRelativeTo(null);
+		frame2.setResizable(false);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
+		frame.setResizable(false);
+		frame.setSize(156,208);
+		}
+public static void main(String[] args) {
+	TelephoneDirectory s = new TelephoneDirectory();
+}
+  //==========================================================================================================
+    void rewriteBox(){
+    	name = new String[book.size()];
+    	Set<Map.Entry<String,String>> s = book.entrySet();
+    	i = 0;
+    	for(Entry<String, String> a : s){
+    		name[i] = a.getKey();
+    		i++;
+    	}
+    	numAll = new JComboBox(name);
+    }
+    
+    
+	Map<String,String> getHashMap(String text){
+		try{
+		int point = numberOfCharacters(text,"=");
+		String [] Name = new String [point];
+		String [] CellNumber = new String [point];
+		int n=0, n1=0, n2=0;
+		for(int b = 0;b<Name.length;b++){
+		    	if(b == 0){
+		    		n = text.indexOf("=");
+		    		if(n == -1){
+		    			break;
+		    		}
+		    		Name[b] = text.substring(1,n);
+		    	}else{
+		    		n2 = text.indexOf(",",n + 1);
+		    		n1 = text.indexOf("=",n + 1);
+		    		Name[b] = text.substring(n2 + 2,n1);
+		    		n = n1;
+		    	}  
+		}
+		n=0;  n1=0;  n2=0;
+		
+		for(int b = 0;b<CellNumber.length;b++){
+	    	if(b == 0){
+	    		n = text.indexOf("=");
+	    		n1 = text.indexOf(",");
+	    		if(n == -1){
+	    			JOptionPane.showMessageDialog(null,"Список пуст");
+	    			nuull = true;
+	    			break;
+	    		}
+	    		if(n1 == -1){
+	    			n2 = text.lastIndexOf("]");
+	    			CellNumber[b] = text.substring(n+1,n2);
+	    			break;
+	    		}
+	    		CellNumber[b] = text.substring(n+1,n1);
+	    	}else if(b < CellNumber.length - 1){
+	    		n2 = text.indexOf(",",n1 + 1);
+	    		n = text.indexOf("=",n1 + 1);
+	    		CellNumber[b] = text.substring(n + 1,n2);
+	    		n1 = n2;
+	    	}else{
+	    		n1 = text.lastIndexOf("]");
+	    		n2 = text.lastIndexOf("=");
+	    		CellNumber[b] = text.substring(n2 + 1,n1);
+	    	}
+	}	
+		Map<String,String> boook = new HashMap<String,String>();
+		
+		for(int i = 0;i<CellNumber.length;i++){
+			boook.put(Name[i], CellNumber[i]);
+		}
+		return boook;
+		}catch(Exception e){
+			JOptionPane.showMessageDialog(null, "Не удалось корректно прочитать файл, попробуйте использовать пустой текстовый файл");
+			return null;
+		}
+	}
+	
+public int numberOfCharacters(String text,String searchStr){
+	int n =0,n1=0;
+	int point = 0;
+    while(true){
+    	if(point == 0){
+    		n = text.indexOf(searchStr);
+    	}else{
+    		n1 = text.indexOf(searchStr,n + 1);
+    		n = n1;
+    	}
+    	if(n1 == -1){
+    		break;
+    	}
+    	point++;      
+    }
+   return point;
+}
+}
+
+class lr implements ActionListener {
+TelephoneDirectory s;
+	lr(TelephoneDirectory s){
+		this.s = s;
+	}
+	File scroll;
+	public void actionPerformed(ActionEvent e) {
+		 if(s.search == e.getSource()){
+			 String textBox = (String) s.numAll.getSelectedItem();
+			 s.search.setBorder(new TitledBorder(s.book.get(textBox)));		 
+		 }
+		 if(s.plus == e.getSource()){
+			 s.frame2.setVisible(true);
+		 }
+		 if(s.yes == e.getSource()){
+                 if(s.NAME.getText().indexOf(",") != -1 || s.NAME.getText().indexOf("=") != -1 ||
+                	s.NUM.getText().indexOf(",") != -1 || s.NUM.getText().indexOf("=") != -1 || 
+                	s.NAME.getText().indexOf("}") != -1 || s.NAME.getText().indexOf("{") != -1 ||
+                	s.NUM.getText().indexOf("}") != -1 || s.NUM.getText().indexOf("{") != -1){
+                	 JOptionPane.showMessageDialog(null, "Недопустимые символы");
+                	 s.NAME.setText("");
+					 s.NUM.setText("");
+					 return;
+                 }
+				 if(s.NAME.getText().equals("") || s.NUM.getText().equals("")){
+					 s.NAME.setText("");
+					 s.NUM.setText("");
+					 JOptionPane.showMessageDialog(null,"Введите название и значение");
+					 return;
+				 }
+				 if(s.nuull == true){
+					 s.book.clear();
+				 }
+			 s.book.put(s.NAME.getText(), s.NUM.getText());			 
+			try{
+				s.writer = new FileWriter(scroll.getPath());
+				 s.writer.write(s.book.toString());
+				 JOptionPane.showMessageDialog(null, "Запись упешно завершена. Необходимо перезапустить приложение для принятия изменений. ");
+			} catch (Exception e1) {
+				
+				JOptionPane.showMessageDialog(null, "Не удалось записать данные в файл: "+ scroll.getPath());
+			}finally{
+				try {
+					s.writer.close();
+				} catch (IOException e1) {
+						
+				}finally{
+					s.NAME.setText("");
+					s.NUM.setText("");
+				}
+			}
+		 }
+		 if(s.no == e.getSource()){
+			 s.NAME.setText("");
+			 s.NUM.setText("");
+			 s.frame2.setVisible(false);
+		 }		
+		 if(s.delete == e.getSource() && s.nuull == false){
+			 String item = (String) s.numAll.getSelectedItem();
+			 s.book.remove(item);
+			 try {
+				s.writer = new FileWriter(scroll.getPath());
+				s.writer.write(s.book.toString());
+				JOptionPane.showMessageDialog(null, "Удаление "+item+" из спика упешно завершено. Необходимо перезапустить приложение для принятия изменений. ");
+			} catch (Exception e1) {
+				
+				JOptionPane.showMessageDialog(null, "Не удалось записать данные в файл: "+ scroll.getPath());
+			}finally{
+				try{
+					s.writer.close();
+				}catch(Exception e2){
+					
+			   }
+			}
+		 }
+		 if(s.fileNew == e.getSource()){
+			 JFileChooser save = new JFileChooser();
+			 int a = save.showDialog(null, "Открыть список (.tsb)");
+			 if(a == JFileChooser.APPROVE_OPTION){
+				 scroll = save.getSelectedFile();
+				 try {
+					s.reader = new FileReader(scroll.getPath());
+					s.buff = new BufferedReader(s.reader);
+					while(true){
+						s.t2 = s.buff.readLine();
+						if(s.t2 == null){
+							break;
+						}
+						s.t += s.t2;
+					    s.t = s.t.replace('{', '[');
+					    s.t = s.t.replace('}', ']');
+					}
+					
+					Map<String, String> set = s.getHashMap(s.t);
+					if(set==null){
+						System.exit(0);
+					}
+					s.book.putAll(set);
+					
+					Set<Map.Entry<String, String>> u = s.book.entrySet();
+					int i = 0;
+					s.name = new String [s.book.size()];
+					for(Entry<String, String> me : u){
+						s.name[i] = me.getKey();
+						i++;
+					}
+					
+				} catch (Exception e1) {
+					//====================
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Список пуст");
+				}finally{
+					try{
+						s.reader.close();
+						s.buff.close();
+						
+						
+					}catch(Exception e1){
+						s.a = true;
+					}
+						s.frame.setVisible(true);
+						s.begin.setVisible(false);
+						
+						if(s.a == true){
+							s.numAll = new JComboBox();
+							}else{
+							s.numAll = new JComboBox(s.name);
+							}
+							s.numAll.setSize(150,40);
+							s.numAll.setLocation(0,60);
+							s.frame.add(s.numAll);
+					 
+				 }
+			 }
+		 }
+	 }
+ }
