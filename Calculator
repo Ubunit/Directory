@@ -1,0 +1,366 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+public class SimpleCalculator {
+// Объявление всех компонентов калькулятора.
+double lo, jo, jolo, plusm = 0;
+String store,signUp, pointStr;
+boolean min = false;
+boolean plu = false;
+boolean ymj = false;
+boolean del = false;
+boolean sequel = false;
+boolean operation = false;
+boolean mrm = false;
+boolean poin = false;
+
+newClass g = new newClass();	
+JPanel windowContent;
+JTextField displayField;
+JTextField M;
+JButton [] numButtons = new JButton [10];
+JButton buttonPoint;
+JButton buttonEqual;
+JPanel p1;
+JButton button01;
+JButton button11;
+JButton delete;
+JPanel east;
+JPanel west;
+JPanel south;
+JButton button31;
+JButton button21;
+JButton sign;
+JButton mc;
+JButton mr;
+JButton mplus;
+
+SimpleCalculator(){
+windowContent= new JPanel();
+BorderLayout bl = new BorderLayout();
+windowContent.setLayout(bl);
+south = new JPanel();
+GridLayout gn = new GridLayout(1,2);
+south.setLayout(gn);
+sign = new JButton("+/-");
+buttonPoint = new JButton(".");
+south.add(buttonPoint);
+south.add(sign);
+displayField = new JTextField("0",20);
+displayField.setEditable(false);
+windowContent.add("South",south);
+windowContent.add("North",displayField);
+
+for (int i=0;i<numButtons.length;i++){
+		   numButtons[i] = new JButton(""+ i);
+}
+buttonEqual=new JButton("=");
+mc = new JButton("MC");
+mr = new JButton("MR");
+mplus = new JButton("M+");
+button11 = new JButton("+");
+button01 = new JButton("-");
+delete = new JButton("C");
+button31 = new JButton("*");
+button21 = new JButton("/");
+p1 = new JPanel();
+GridLayout nl = new GridLayout(4,3);
+p1.setLayout(nl);
+
+for (int i=0;i<numButtons.length;i++){	
+	p1.add(numButtons[i]);	
+}
+p1.add(delete);
+p1.add(buttonEqual);
+// Помещаем панель p1 в центральную область окна
+windowContent.add("Center",p1);
+east = new JPanel();
+GridLayout el = new GridLayout(4,1);
+east.setLayout(el);
+east.add(button11);
+east.add(button01);
+east.add(button31);
+east.add(button21);
+windowContent.add("East",east);
+west = new JPanel();
+west.setLayout(el);
+M = new JTextField(1);
+M.setEditable(false);
+west.add(M);
+west.add(mc);
+west.add(mr);
+west.add(mplus);
+windowContent.add("West",west);
+
+for(int i=0;i<numButtons.length;i++){
+	numButtons[i].addActionListener(g);
+}
+
+delete.addActionListener(g);
+button11.addActionListener(g);
+button01.addActionListener(g);
+button21.addActionListener(g);
+button31.addActionListener(g);
+buttonEqual.addActionListener(g);
+mplus.addActionListener(g);
+mc.addActionListener(g);
+mr.addActionListener(g);
+sign.addActionListener(g);
+buttonPoint.addActionListener(g);
+
+JFrame frame = new JFrame("Calculator");
+frame.setContentPane(windowContent);
+frame.setSize(240, 200);
+frame.setVisible(true);
+frame.setResizable(false);
+frame.setLocationRelativeTo(null);
+}
+
+public class newClass implements ActionListener {
+	public void actionPerformed(ActionEvent e) {
+		try{
+			for(int i=0;i<numButtons.length;i++){
+				if (e.getSource()==numButtons[i]){			
+					if(operation == true && plu == true || operation == true && min == true || operation == true && ymj == true ||operation == true && del == true || operation == true && mrm == true){
+						displayField.setText(""+ i);
+						min = false; operation = false;
+						plu = false;
+						ymj = false;
+						del = false;				  
+					}else{
+		     	String b = displayField.getText();
+			    if(b.equals("0")){
+				displayField.setText(""+ i);
+				sequel = false;
+			              }
+		     	else{		
+		        displayField.setText(b +""+ i);
+		        sequel = false;
+				   }
+				}
+			}		
+		}
+			if (e.getSource()==delete){
+				displayField.setText("0");
+				min = false;   sequel = false;
+				plu = false;  operation = false;
+				ymj = false;   mrm = false;
+				del = false;   poin = false;
+			}			
+			if(e.getSource()==button11){
+				jo = Double.parseDouble(displayField.getText());
+				displayField.setText("0");
+				min = false;   sequel = false;
+				plu = true;    operation = false;
+				ymj = false;  poin = false;
+				del = false;				
+			}	
+			if(e.getSource()==button01){
+				jo = Double.parseDouble(displayField.getText());
+				displayField.setText("0");
+				min = true;   sequel = false;
+				plu = false;  operation = false;
+				ymj = false;  poin = false;
+				del = false;
+			}
+			if(e.getSource()==button31){
+				jo = Double.parseDouble(displayField.getText());
+				displayField.setText("0");
+				min = false;   sequel = false;
+				plu = false;   operation = false;
+				ymj = true;   poin = false;
+				del = false;
+			}
+			if(e.getSource()==button21){
+				jo = Double.parseDouble(displayField.getText());
+				displayField.setText("0");
+				min = false;   sequel = false;
+				plu = false;   operation = false;
+				ymj = false;    poin = false;
+				del = true;
+			}
+			if(e.getSource()==buttonEqual){
+			if(plu == true){
+				if(sequel == true){
+					jo = Double.parseDouble(displayField.getText());
+					jolo = jo + lo;
+					jolo *= 1000000000;
+					long ok = (long) jolo;
+					jolo = ok;
+	                jolo /= 1000000000;
+	                store = Double.toString(jolo);
+	                PointIsNotInPlace(store);
+					operation = true;
+					poin = true;
+				}
+				else{
+				lo = Double.parseDouble(displayField.getText());
+				jolo = jo + lo;
+				jolo *= 1000000000;
+				long ok = (long) jolo;
+				jolo = ok;
+                jolo /= 1000000000;
+                store = Double.toString(jolo);
+                PointIsNotInPlace(store);	
+				sequel = true;
+				operation = true;
+				poin = true;
+			  }
+			}
+			if(min == true){
+				if(sequel == true){
+					jo = Double.parseDouble(displayField.getText());
+					jolo = jo - lo;
+					jolo *= 1000000000;
+					long ok = (long) jolo;
+					jolo = ok;
+	                jolo /= 1000000000;
+	                store = Double.toString(jolo);
+	                PointIsNotInPlace(store);
+					operation = true;
+					poin = true;
+				}
+				else{
+				lo = Double.parseDouble(displayField.getText());
+				jolo = jo - lo;
+				jolo *= 1000000000;
+				long ok = (long) jolo;
+				jolo = ok;
+                jolo /= 1000000000;
+                store = Double.toString(jolo);
+                PointIsNotInPlace(store);			
+				sequel = true;
+				operation = true;
+				poin = true;
+				}
+			}
+			if(ymj == true){	
+				if(sequel == true){
+					jo = Double.parseDouble(displayField.getText());
+					jolo = jo * lo;
+					jolo *= 1000000000;
+					long ok = (long) jolo;
+					jolo = ok;
+	                jolo /= 1000000000;
+	                store = Double.toString(jolo);
+	                PointIsNotInPlace(store);
+					operation = true;
+					poin = true;
+				}
+				else{
+				lo = Double.parseDouble(displayField.getText());
+				jolo = jo * lo;
+				jolo *= 1000000000;
+				long ok = (long) jolo;
+				jolo = ok;
+                jolo /= 1000000000;
+                store = Double.toString(jolo);
+                PointIsNotInPlace(store);	
+				sequel = true;
+				operation = true;
+				poin = true;
+				}
+			}		
+			if(del == true){
+				if(sequel == true){
+					jo = Double.parseDouble(displayField.getText());
+					 jolo = jo / lo;
+					 jolo *= 1000000000;
+					 long ok = (long) jolo;
+			       	 jolo = ok;
+		             jolo /= 1000000000;
+		             store = Double.toString(jolo);
+		             PointIsNotInPlace(store);
+					operation = true;
+					poin = true;
+				}
+				else{
+				lo =Double.parseDouble(displayField.getText());
+				jolo = jo / lo;
+				jolo *= 1000000000;
+				long ok = (long) jolo;
+				jolo = ok;
+                jolo /= 1000000000;
+                store = Double.toString(jolo);
+                PointIsNotInPlace(store);	
+				sequel = true;
+				operation = true;
+				poin = true;
+				}
+			}
+		}
+			if(e.getSource()==mplus){
+				plusm = Double.parseDouble(displayField.getText());
+				M.setText("M");		
+				}			
+			if(e.getSource()==mc){
+				plusm = 0;
+				M.setText("");
+			}		
+			if(e.getSource()==mr){
+				displayField.setText(""+ plusm);
+				  sequel = false;
+				  operation = true;
+				  mrm = true;			
+			}			
+			if(e.getSource()==buttonPoint){
+				if(poin == true){
+					return;
+				}
+				else{
+					pointStr = displayField.getText();
+					displayField.setText(pointStr + ".");
+					poin = true;
+				}
+			}				
+			if(e.getSource()==sign){
+				double display;
+				int display_int;
+				signUp = displayField.getText();
+				int index = signUp.indexOf('-');
+				int indexPoint = signUp.indexOf('.');
+				if(index == 0){
+					if(indexPoint == -1){
+					display_int = Integer.parseInt(signUp);
+					displayField.setText("" + Math.abs(display_int));
+					}else{
+						display = Double.parseDouble(signUp);
+						display = Math.abs(display);
+						signUp = Double.toString(display);
+						PointIsNotInPlace(signUp);
+					}			
+				}else if(index == -1){
+					String s;
+					s = signUp;
+					signUp  = "-"+ s;
+					if(indexPoint == -1){
+						display_int = Integer.parseInt(signUp);
+						displayField.setText(""+display_int);
+					}else{
+					PointIsNotInPlace(signUp);
+					}	
+				}		
+			}						
+		}catch (Exception ex){JOptionPane.showMessageDialog(null,"" + ex.toString()); ex.printStackTrace();
+		displayField.setText("0");
+		}
+	}
+void PointIsNotInPlace(String a){
+	int indexThis = a.indexOf(".");
+	String p1 = a.substring(0,indexThis);
+    String p2 = a.substring(indexThis + 1);
+    if(p2.equals("0") || p2.equals("")){
+    	int display2 = Integer.parseInt(p1);
+    	poin = false;
+	    displayField.setText("" + display2);				    
+    }else{
+    	    double display = Double.parseDouble(a);
+    	    displayField.setText("" + display);
+	    }	
+    }
+}
+public static void main(String[] args) {
+	SimpleCalculator calc = new SimpleCalculator();
+}
+}
