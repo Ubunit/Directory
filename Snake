@@ -1,0 +1,657 @@
+# Directory
+import java.awt.*;
+import java.awt.event.*;
+import java.applet.Applet;
+
+public class Launcher extends Applet implements ActionListener{	
+	
+Button [] arrow;
+Button red[] = new Button [400];
+Label yourScore;
+Label yourHighscore;
+Button bonus;
+Button newGame;
+Button settingColor;
+Button pause;
+Button resume;
+Button colorSnake;
+Button thisColorSnake;
+Button colorBonus;
+Button thisColorBonus;
+boolean [] redVisible = new boolean [400];
+int colorR = 3;
+int colorR1 = 2;
+int colorR2;
+int up;
+int left;
+int size = 10;
+String [] color = {"WHITE","GREEN","RED","BLUE","YELLOW","CYAN","PINK","MAGENTA","ORANGE","GRAY","BLACK"};
+Point tabScore = new Point(110,170);
+Point tabScoreUp = new Point(80,4);
+Point tabHighscore = new Point(110,180);
+Point tabHighscoreUp = new Point(70,14);
+Point locationBonus; 
+Point locationRed;
+int randomLocation;
+int randomLocation2;
+int scoreInt = 1, highscoreInt = 1;
+Point snake;
+	public void init(){
+
+     	this.setLayout(null);
+     	this.setBackground(Color.BLACK);
+		
+		Font fnt = new Font("Monospased",Font.BOLD, 16);
+		Font font2 = new Font("Monospased",Font.BOLD,10);
+		this.setFont(font2);
+	
+		yourScore = new Label();
+		yourScore.setSize(120,10);
+		yourScore.setBackground(Color.BLACK);
+		yourScore.setFont(font2);
+		yourScore.setForeground(Color.WHITE);
+		this.add(yourScore);
+		
+		yourHighscore = new Label();
+		yourHighscore.setSize(120,12);
+		yourHighscore.setFont(font2);
+		yourHighscore.setBackground(Color.BLACK);
+		yourHighscore.setForeground(Color.WHITE);
+		this.add(yourHighscore);
+		
+		newGame = new Button("New Game");
+		newGame.setSize(100,30);
+		newGame.setLocation(50,31);
+		newGame.setFont(fnt);
+		this.add(newGame);
+		
+		resume = new Button("Resume");
+		resume.setSize(100,30);
+		resume.setLocation(50,62);
+		resume.setFont(fnt);
+		resume.setEnabled(false);
+		this.add(resume);
+		
+		settingColor = new Button("Color background");
+		settingColor.setSize(100,30);
+		settingColor.setLocation(50,93);
+		settingColor.setFont(font2);
+		this.add(settingColor);
+		
+		colorSnake = new Button("Color Snake");
+		colorSnake.setSize(100,30);
+		colorSnake.setLocation(50,124);
+		colorSnake.setFont(font2);
+		this.add(colorSnake);
+		
+		thisColorSnake = new Button();
+		thisColorSnake.setSize(10,30);
+		thisColorSnake.setLocation(151,124);
+		thisColorSnake.setBackground(Color.GREEN);
+		thisColorSnake.setEnabled(false);
+		this.add(thisColorSnake);
+		
+		colorBonus = new Button("Food color");
+		colorBonus.setSize(100,30);
+		colorBonus.setLocation(50,155);
+		colorBonus.setFont(font2);
+		this.add(colorBonus);
+		
+		thisColorBonus = new Button();
+		thisColorBonus.setSize(10,30);
+		thisColorBonus.setLocation(151,155);
+		thisColorBonus.setBackground(Color.RED);
+		thisColorBonus.setEnabled(false);
+		this.add(thisColorBonus);
+		
+		pause = new Button("Stop");
+		pause.setSize(30,30);
+		pause.setLocation(80,170);
+		pause.setFont(font2);
+		
+	    bonus = new Button();
+	    bonus.setSize(size,size);
+	    bonus.setBackground(Color.RED);
+	    bonus.setEnabled(false);
+	    
+	 
+	    
+	    for (int i = 0; i<red.length; i++){
+		red[i] = new Button();
+		red[i].setBackground(Color.GREEN);
+		red[i].setSize(size,size);
+		red[i].setEnabled(false);
+	    }	
+		
+		arrow = new Button [4];
+		arrow[0]= new Button("L");
+		arrow[1]= new Button("R");
+		arrow[2]= new Button("Up");
+		arrow[3]= new Button("Down");
+		arrow[0].setSize(25,30);
+		arrow[1].setSize(25,30);
+		arrow[2].setSize(30,15);
+		arrow[3].setSize(30,15);
+		arrow[0].setLocation(0,170);
+		arrow[1].setLocation(55,170);
+		arrow[2].setLocation(25,170);
+		arrow[3].setLocation(25,185);
+		
+		this.add(red[0]);
+		this.add(bonus);
+        this.add(pause);
+        
+		
+		pause.setVisible(false);
+		red[0].setVisible(false);
+		bonus.setVisible(false);
+		for(int i=0;i<4;i++){
+			this.add(arrow[i]);
+			arrow[i].setVisible(false);
+			arrow[i].addActionListener(this);
+		}	
+		newGame.addActionListener(this);
+		settingColor.addActionListener(this);
+		pause.addActionListener(this);
+		resume.addActionListener(this);
+		colorSnake.addActionListener(this);
+		colorBonus.addActionListener(this);
+	}
+	public void actionPerformed(ActionEvent e) {
+		Button button = (Button) e.getSource();
+		if(button == newGame){
+			
+			NewGame();
+			
+		}
+		if(button == pause){
+			Stop();
+		}
+		
+		if(button == arrow[2]){						
+			   if(up == 0){
+				   for(int b=red.length - 1;b>=1;b--){
+						snake = red[b - 1].getLocation();
+						red[b].setLocation(snake);
+					}
+				up = 160;
+				red[0].setLocation(left,up);
+			   }else{
+				   Up();
+			   }
+	       Bonus();
+	       End();
+		}
+		if(button == arrow[3]){			
+			   if(up == 160){
+				   for(int b=red.length - 1;b>=1;b--){
+						snake = red[b - 1].getLocation();
+						red[b].setLocation(snake);
+					}
+				up = 0;
+				red[0].setLocation(left,up);
+			   }else{
+				   Down();
+			   }
+		
+			Bonus();
+			End();
+		}
+		if(button == arrow[0]){			
+			   if(left == 0){
+				   for(int b=red.length - 1;b>=1;b--){
+						snake = red[b - 1].getLocation();
+						red[b].setLocation(snake);
+					}
+				left = 190;
+				red[0].setLocation(left,up);
+			   }else{
+				   Left();
+			   }      
+            Bonus();
+            End();
+		}
+		if(button == arrow[1]){										
+		   if(left == 190){
+			   for(int b=red.length - 1;b>=1;b--){
+					snake = red[b - 1].getLocation();
+					red[b].setLocation(snake);
+				}
+			left = 0;
+			red[0].setLocation(left,up);
+		   }else{
+			   Right();
+		   }					
+			Bonus();	
+			End();
+		}
+		
+		if(button == resume){
+			Resume();
+		}
+		
+		
+		if(button == colorBonus){
+			
+			if(color[colorR].equals("YELLOW")) {
+				thisColorBonus.setBackground(Color.YELLOW);
+				bonus.setBackground(Color.YELLOW);
+			}
+			if(color[colorR].equals("BLACK")){
+				thisColorBonus.setBackground(Color.BLACK);
+				bonus.setBackground(Color.BLACK);
+				
+			}
+			if(color[colorR].equals("RED")){
+				thisColorBonus.setBackground(Color.RED);
+				bonus.setBackground(Color.RED);
+				
+			}
+			if(color[colorR].equals("GREEN")){
+				thisColorBonus.setBackground(Color.GREEN);
+				bonus.setBackground(Color.GREEN);
+				
+			}
+			if(color[colorR].equals("BLUE")){
+				thisColorBonus.setBackground(Color.BLUE);
+				bonus.setBackground(Color.BLUE);
+				
+			}
+			if(color[colorR].equals("GRAY")){
+				thisColorBonus.setBackground(Color.GRAY);
+				bonus.setBackground(Color.GRAY);
+				
+			}
+			if(color[colorR].equals("CYAN")){
+				thisColorBonus.setBackground(Color.CYAN);
+				bonus.setBackground(Color.CYAN);
+				
+			}
+			if(color[colorR].equals("WHITE")){ 
+				thisColorBonus.setBackground(Color.WHITE);
+				bonus.setBackground(Color.WHITE); 
+				 
+			}
+			if(color[colorR].equals("MAGENTA")){
+				thisColorBonus.setBackground(Color.MAGENTA);
+				bonus.setBackground(Color.MAGENTA);
+			}
+			if(color[colorR].equals("ORANGE")){
+				thisColorBonus.setBackground(Color.ORANGE);
+				bonus.setBackground(Color.ORANGE);
+				
+			}
+			if(color[colorR].equals("PINK")){
+				thisColorBonus.setBackground(Color.PINK);
+					bonus.setBackground(Color.PINK);
+				
+				
+			}
+			colorR++;
+			if(colorR == 11){
+				colorR = 0;
+			}
+		}
+
+		if(button == colorSnake){
+			
+		if(color[colorR1].equals("YELLOW")) {
+			thisColorSnake.setBackground(Color.YELLOW);
+			for(int i=0;i<red.length;i++){
+				red[i].setBackground(Color.YELLOW);
+			}
+		}
+		if(color[colorR1].equals("BLACK")){
+			thisColorSnake.setBackground(Color.BLACK);
+			for(int i=0;i<red.length;i++){
+				red[i].setBackground(Color.BLACK);
+			}
+			
+		}
+		if(color[colorR1].equals("RED")){
+			thisColorSnake.setBackground(Color.RED);
+			for(int i=0;i<red.length;i++){
+				red[i].setBackground(Color.RED);
+			}
+			
+		}
+		if(color[colorR1].equals("GREEN")){
+			thisColorSnake.setBackground(Color.GREEN);
+			for(int i=0;i<red.length;i++){
+				red[i].setBackground(Color.GREEN);
+			}
+			
+		}
+		if(color[colorR1].equals("BLUE")){
+			thisColorSnake.setBackground(Color.BLUE);
+			for(int i=0;i<red.length;i++){
+				red[i].setBackground(Color.BLUE);
+			}
+			
+		}
+		if(color[colorR1].equals("GRAY")){
+			thisColorSnake.setBackground(Color.GRAY);
+			for(int i=0;i<red.length;i++){
+				red[i].setBackground(Color.GRAY);
+			}
+			
+			
+		}
+		if(color[colorR1].equals("CYAN")){
+			thisColorSnake.setBackground(Color.CYAN);
+			for(int i=0;i<red.length;i++){
+				red[i].setBackground(Color.CYAN);
+			}
+			
+		}
+		if(color[colorR1].equals("WHITE")){ 
+			thisColorSnake.setBackground(Color.WHITE);
+			for(int i=0;i<red.length;i++){
+				red[i].setBackground(Color.WHITE);
+			} 
+			 
+		}
+		if(color[colorR1].equals("MAGENTA")){
+			thisColorSnake.setBackground(Color.MAGENTA);
+			for(int i=0;i<red.length;i++){
+				red[i].setBackground(Color.MAGENTA);
+			}
+			
+		}
+		if(color[colorR1].equals("ORANGE")){
+			thisColorSnake.setBackground(Color.ORANGE);
+			for(int i=0;i<red.length;i++){
+				red[i].setBackground(Color.ORANGE);
+			}
+			
+		}
+		if(color[colorR1].equals("PINK")){
+			thisColorSnake.setBackground(Color.PINK);
+			for(int i=0;i<red.length;i++){
+				red[i].setBackground(Color.PINK);
+			}
+			
+		}
+		colorR1++;
+		if(colorR1 == 11){
+			colorR1 = 0;
+		}
+		}
+	
+		if(button == settingColor){
+			
+			if(color[colorR2].equals("YELLOW")) {
+				this.setBackground(Color.YELLOW);
+				yourScore.setBackground(Color.YELLOW);
+				yourScore.setForeground(Color.BLACK);
+				yourHighscore.setBackground(Color.YELLOW);
+				yourHighscore.setForeground(Color.BLACK);
+			}
+			if(color[colorR2].equals("BLACK")){
+				this.setBackground(Color.BLACK);
+				yourScore.setBackground(Color.BLACK);
+				yourScore.setForeground(Color.WHITE);
+				yourHighscore.setBackground(Color.BLACK);
+				yourHighscore.setForeground(Color.WHITE);
+			}
+			if(color[colorR2].equals("RED")){
+				this.setBackground(Color.RED);
+				yourScore.setBackground(Color.RED);
+				yourScore.setForeground(Color.WHITE);
+				yourHighscore.setBackground(Color.RED);
+				yourHighscore.setForeground(Color.WHITE);
+			}
+			if(color[colorR2].equals("GREEN")){
+				this.setBackground(Color.GREEN);
+				yourScore.setBackground(Color.GREEN);
+				yourScore.setForeground(Color.BLACK);
+				yourHighscore.setBackground(Color.GREEN);
+				yourHighscore.setForeground(Color.BLACK);
+			}
+			if(color[colorR2].equals("BLUE")){
+				this.setBackground(Color.BLUE);
+				yourScore.setBackground(Color.BLUE);
+				yourScore.setForeground(Color.WHITE);
+				yourHighscore.setBackground(Color.BLUE);
+				yourHighscore.setForeground(Color.WHITE);
+			}
+			if(color[colorR2].equals("GRAY")){
+				this.setBackground(Color.GRAY);
+				yourScore.setBackground(Color.GRAY);
+				yourScore.setForeground(Color.WHITE);
+				yourHighscore.setBackground(Color.GRAY);
+				yourHighscore.setForeground(Color.WHITE);
+				
+			}
+			if(color[colorR2].equals("CYAN")){
+				this.setBackground(Color.CYAN);
+				yourScore.setBackground(Color.CYAN);
+				yourScore.setForeground(Color.BLACK);
+				yourHighscore.setBackground(Color.CYAN);
+				yourHighscore.setForeground(Color.BLACK);
+			}
+			if(color[colorR2].equals("WHITE")){ 
+				this.setBackground(Color.WHITE);
+				yourScore.setBackground(Color.WHITE); 
+				yourScore.setForeground(Color.BLACK); 
+				yourHighscore.setBackground(Color.WHITE);
+				yourHighscore.setForeground(Color.BLACK);
+			}
+			if(color[colorR2].equals("MAGENTA")){
+				this.setBackground(Color.MAGENTA);
+				yourScore.setBackground(Color.MAGENTA);
+				yourScore.setForeground(Color.WHITE);
+				yourHighscore.setBackground(Color.MAGENTA);
+				yourHighscore.setForeground(Color.WHITE);
+			}
+			if(color[colorR2].equals("ORANGE")){
+				this.setBackground(Color.ORANGE);
+				yourScore.setBackground(Color.ORANGE);
+				yourScore.setForeground(Color.WHITE);
+				yourHighscore.setBackground(Color.ORANGE);
+				yourHighscore.setForeground(Color.WHITE);
+			}
+			if(color[colorR2].equals("PINK")){
+				this.setBackground(Color.PINK);
+				yourScore.setBackground(Color.PINK);
+				yourScore.setForeground(Color.BLACK);
+				yourHighscore.setBackground(Color.PINK);
+				yourHighscore.setForeground(Color.BLACK);
+			}
+			colorR2++;
+			if(colorR2 == 11){
+				colorR2 = 0;
+			}
+				
+		}
+	
+	}
+	// Метод ходит вверх
+	void Up(){	
+		for(int b=red.length - 1;b>=1;b--){
+			snake = red[b - 1].getLocation();
+			red[b].setLocation(snake);
+		}
+		
+		up -= size;
+		red[0].setLocation(left,up);
+		
+				
+	}
+	// Метод ходит вниз
+	 void Down(){
+			for(int b=red.length - 1;b>=1;b--){
+				snake = red[b - 1].getLocation();
+				red[b].setLocation(snake);
+			}
+			
+		up += size;	
+		red[0].setLocation(left,up);	
+		
+			
+	}
+	// Метод ходит влево
+	 void Left(){
+		
+			for(int b=red.length - 1;b>=1;b--){
+				snake = red[b - 1].getLocation();
+				red[b].setLocation(snake);
+			}
+			
+		left -= size;	
+		red[0].setLocation(left,up);
+		
+			
+	}
+	 // Метод ходит вправо
+	 void Right(){
+		
+			for(int b=red.length - 1;b>=1;b--){
+				snake = red[b - 1].getLocation();
+				red[b].setLocation(snake);
+			}
+			
+		left += size;	
+		red[0].setLocation(left,up);
+		
+		
+		
+	}
+	// Метод решает, что делать когда вы "съели" бонус
+	void Bonus(){
+		if(red[0].getLocation().equals(bonus.getLocation())){
+			scoreInt++;
+		    this.add(red[scoreInt - 1]);
+		    red[scoreInt - 1].setVisible(true);
+		    redVisible[scoreInt - 1] = true;
+			yourScore.setText("Score: "+scoreInt);
+			if(scoreInt > highscoreInt){
+				highscoreInt = scoreInt;
+				yourHighscore.setText("Highscore: "+highscoreInt);
+			}
+			    locationBonus = RandomLocation();
+			bonus.setLocation(locationBonus);
+		}else{
+	         
+		}
+	}
+	// Метод ставит игру на паузу
+	void Stop(){
+		yourHighscore.setLocation(tabHighscoreUp);
+		yourScore.setLocation(tabScoreUp);
+		for(int b=0;b<red.length;b++){
+		red[b].setVisible(false);
+		}
+		bonus.setVisible(false);
+		arrow[0].setVisible(false);
+		arrow[1].setVisible(false);
+		arrow[2].setVisible(false);
+		arrow[3].setVisible(false);
+		pause.setVisible(false);
+		colorSnake.setVisible(true);
+		newGame.setVisible(true);
+		resume.setVisible(true);
+		resume.setEnabled(true);
+		settingColor.setVisible(true);
+		thisColorSnake.setVisible(true);
+		colorBonus.setVisible(true);
+		thisColorBonus.setVisible(true);
+	}
+	// Метод продолжает игру после паузы
+	void Resume(){
+		yourScore.setLocation(tabScore);
+		yourHighscore.setLocation(tabHighscore);
+		resume.setVisible(false);
+		newGame.setVisible(false);
+		settingColor.setVisible(false);
+		colorSnake.setVisible(false);
+		thisColorSnake.setVisible(false);
+		colorBonus.setVisible(false);
+		thisColorBonus.setVisible(false);
+		yourScore.setVisible(true);
+		red[0].setLocation(left,up);
+		for(int i=0;i<red.length;i++){
+		red[i].setVisible(true);
+		}
+		
+		bonus.setVisible(true);
+		for(int i = 0;i<4;i++){
+		   arrow[i].setVisible(true);
+		}
+		pause.setVisible(true);
+	}
+	// Метод начинает новую игру
+	void NewGame(){
+		resume.setVisible(false);
+		newGame.setVisible(false);
+		settingColor.setVisible(false);
+		colorSnake.setVisible(false);
+		thisColorSnake.setVisible(false);
+		colorBonus.setVisible(false);
+		thisColorBonus.setVisible(false);
+	
+		for(int i=1;i<red.length;i++){
+			this.remove(red[i]);
+		}
+		for(int i=1;i<redVisible.length;i++){
+			redVisible[i] = false;
+		}
+		left = (int)(Math.random() *155);
+	    left /= 10;
+	    left *= 10;
+	    up = (int)(Math.random()* 85);
+	    up /= 10;
+	    up *= 10;
+	    red[0].setLocation(left,up);
+	    
+	    locationBonus = RandomLocation();
+	    bonus.setLocation(locationBonus);
+	    
+	    scoreInt = 1;
+	    yourScore.setText("Score: "+ scoreInt);
+	    yourScore.setLocation(tabScore);
+		yourScore.setVisible(true);
+		
+		yourHighscore.setText("Highscore: "+ highscoreInt);
+		yourHighscore.setLocation(tabHighscore);
+		yourHighscore.setVisible(true);
+		
+		red[0].setLocation(left,up);
+		red[0].setVisible(true);
+		bonus.setVisible(true);
+		for(int i = 0;i<4;i++){
+		   arrow[i].setVisible(true);
+		}
+		pause.setVisible(true);
+		
+	    
+	    
+	}
+	// Метод определяет случайное место появление 
+	Point RandomLocation(){
+		
+		int location1,location2;
+		Point location;
+		
+		location1 = (int)(Math.random() *155);
+	    location1 /= 10;
+	    location1 *= 10;
+	    location2 = (int)(Math.random()* 85);
+	    location2 /= 10;
+	    location2 *= 10;
+	    location = new Point(location2,location1);
+		
+		return location;
+		
+		
+	}
+	
+     void End(){
+		for(int i=1;i<red.length;i++){
+			if(red[0].getLocation().equals(red[i].getLocation()) && redVisible[i] == true){
+			NewGame();	
+			}
+		 }
+      }
+	
+}
