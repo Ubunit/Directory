@@ -1,10 +1,8 @@
-# Directory
 import java.awt.*;
 import java.awt.event.*;
 import java.applet.Applet;
 
 public class Launcher extends Applet implements ActionListener{	
-	
 Button [] arrow;
 Button red[] = new Button [400];
 Label yourScore;
