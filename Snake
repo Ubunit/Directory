@@ -2,7 +2,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.applet.Applet;
 
-public class Launcher extends Applet implements ActionListener{	
+public class Launcher extends Applet implements ActionListener,Runnable{	
+	
 Button [] arrow;
 Button red[] = new Button [400];
 Label yourScore;
@@ -17,6 +18,8 @@ Button thisColorSnake;
 Button colorBonus;
 Button thisColorBonus;
 boolean [] redVisible = new boolean [400];
+boolean upp = true,downn = false,leftt = false, rightt = false;
+boolean go = false;
 int colorR = 3;
 int colorR1 = 2;
 int colorR2;
@@ -147,74 +150,45 @@ Point snake;
 		resume.addActionListener(this);
 		colorSnake.addActionListener(this);
 		colorBonus.addActionListener(this);
+		
+		Thread worker = new Thread(this);
+		worker.start();
+		
 	}
 	public void actionPerformed(ActionEvent e) {
 		Button button = (Button) e.getSource();
-		if(button == newGame){
-			
-			NewGame();
-			
+		if(button == newGame){	
+			NewGame();	
 		}
 		if(button == pause){
 			Stop();
+			
 		}
 		
-		if(button == arrow[2]){						
-			   if(up == 0){
-				   for(int b=red.length - 1;b>=1;b--){
-						snake = red[b - 1].getLocation();
-						red[b].setLocation(snake);
-					}
-				up = 160;
-				red[0].setLocation(left,up);
-			   }else{
-				   Up();
-			   }
-	       Bonus();
-	       End();
+		if(button == arrow[2]){
+			downn = false;
+			upp = true;
+			leftt = false;
+			rightt = false;
+	        
 		}
-		if(button == arrow[3]){			
-			   if(up == 160){
-				   for(int b=red.length - 1;b>=1;b--){
-						snake = red[b - 1].getLocation();
-						red[b].setLocation(snake);
-					}
-				up = 0;
-				red[0].setLocation(left,up);
-			   }else{
-				   Down();
-			   }
-		
-			Bonus();
-			End();
+		if(button == arrow[3]){	
+			downn = true;
+			upp = false;
+			leftt = false;
+			rightt = false;
 		}
-		if(button == arrow[0]){			
-			   if(left == 0){
-				   for(int b=red.length - 1;b>=1;b--){
-						snake = red[b - 1].getLocation();
-						red[b].setLocation(snake);
-					}
-				left = 190;
-				red[0].setLocation(left,up);
-			   }else{
-				   Left();
-			   }      
-            Bonus();
-            End();
+		if(button == arrow[0]){	
+			downn = false;
+			upp = false;
+			leftt = true;
+			rightt = false;
 		}
-		if(button == arrow[1]){										
-		   if(left == 190){
-			   for(int b=red.length - 1;b>=1;b--){
-					snake = red[b - 1].getLocation();
-					red[b].setLocation(snake);
-				}
-			left = 0;
-			red[0].setLocation(left,up);
-		   }else{
-			   Right();
-		   }					
-			Bonus();	
-			End();
+		if(button == arrow[1]){	
+			downn = false;
+			upp = false;
+			leftt = false;
+			rightt = true;
 		}
 		if(button == resume){
 			Resume();
@@ -446,7 +420,7 @@ Point snake;
 			red[b].setLocation(snake);
 		}
 		up += size;	
-		red[0].setLocation(left,up);	
+		red[0].setLocation(left,up);
 	}
 	// Метод ходит влево
 	 void Left(){
@@ -463,8 +437,7 @@ Point snake;
 		for(int b=red.length - 1;b>=1;b--){
 			snake = red[b - 1].getLocation();
 			red[b].setLocation(snake);
-		}
-			
+		}		
 		left += size;	
 		red[0].setLocation(left,up);
 	}
@@ -507,6 +480,7 @@ Point snake;
 		thisColorSnake.setVisible(true);
 		colorBonus.setVisible(true);
 		thisColorBonus.setVisible(true);
+		go = false;
 	}
 	// Метод продолжает игру после паузы
 	void Resume(){
@@ -530,6 +504,7 @@ Point snake;
 		   arrow[i].setVisible(true);
 		}
 		pause.setVisible(true);
+		go = true;
 	}
 	// Метод начинает новую игру
 	void NewGame(){
@@ -570,6 +545,7 @@ Point snake;
 		   arrow[i].setVisible(true);
 		}
 		pause.setVisible(true);
+		go = true;
 	}
 	// Метод определяет случайное место появление 
 	Point RandomLocation(){
@@ -591,4 +567,80 @@ Point snake;
 			}
 		 }
       }
-}
+	
+	public void run() {
+		while(true){
+			if(go){
+		if(upp == true){
+			 if(up == 0){
+				   for(int b=red.length - 1;b>=1;b--){
+						snake = red[b - 1].getLocation();
+						red[b].setLocation(snake);
+					}
+				up = 160;
+				red[0].setLocation(left,up);
+			   }else{
+					Up();
+			   }
+	       Bonus();
+	       End();
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {}
+		}
+		if(downn == true){
+			   if(up == 160){
+				   for(int b=red.length - 1;b>=1;b--){
+						snake = red[b - 1].getLocation();
+						red[b].setLocation(snake);
+					}
+				up = 0;
+				red[0].setLocation(left,up);
+			   }else{
+				   Down();
+			   }
+		
+			Bonus();
+			End();
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {}
+		}
+		if(leftt == true){
+			   if(left == 0){
+				   for(int b=red.length - 1;b>=1;b--){
+						snake = red[b - 1].getLocation();
+						red[b].setLocation(snake);
+					}
+				left = 190;
+				red[0].setLocation(left,up);
+			   }else{
+				   Left();
+			   }      
+            Bonus();
+            End();
+            try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {}
+		}
+		if(rightt == true){
+		   if(left == 190){
+			   for(int b=red.length - 1;b>=1;b--){
+					snake = red[b - 1].getLocation();
+					red[b].setLocation(snake);
+				}
+			left = 0;
+			red[0].setLocation(left,up);
+		   }else{
+			   Right();
+		   }					
+			Bonus();	
+			End();
+			 try {
+					Thread.sleep(250);
+				 } catch (InterruptedException e) {}
+		      }
+		   }
+		}
+	     }
+          }
