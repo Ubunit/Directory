@@ -299,7 +299,8 @@ public class newClass implements ActionListener {
 				M.setText("");
 			}		
 			if(e.getSource()==mr){
-				displayField.setText(""+ plusm);
+			String plusm_string = Double.toString(plusm);
+                        PointIsNotInPlace(plusm_string);
 				  sequel = false;
 				  operation = true;
 				  mrm = true;			
